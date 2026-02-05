@@ -151,6 +151,38 @@ class FoodRiskAssessment(models.Model):
         return f"Donation {self.donation.id} - {self.risk_level}"
 
 
+class Rating(models.Model):
+    RATING_CHOICES = (
+        (1, '1 Star'),
+        (2, '2 Stars'),
+        (3, '3 Stars'),
+        (4, '4 Stars'),
+        (5, '5 Stars'),
+    )
+
+    rated_user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='ratings_received'
+    )
+
+    rated_by = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='ratings_given'
+    )
+
+    rating = models.IntegerField(choices=RATING_CHOICES)
+    comment = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['rated_user', 'rated_by']
+
+    def __str__(self):
+        return f"{self.rated_by.username} rated {self.rated_user.username} - {self.rating} stars"
+
+
 class ImpactLog(models.Model):
     donation = models.ForeignKey(
         Donation,

@@ -45,8 +45,12 @@ class ImpactAdmin(admin.ModelAdmin):
         "co2_saved_kg",
     )
 
-@admin.action(description="Approve selected food requests")
-def approve_requests(modeladmin, request, queryset):
-    queryset.update(status="APPROVED")
+
+from .models import Rating
+
+@admin.register(Rating)
+class RatingAdmin(admin.ModelAdmin):
+    list_display = ("rated_user", "rated_by", "rating", "created_at")
+    list_filter = ("rating", "created_at")
 
 
